@@ -60,7 +60,7 @@ export function validarBaseLegal(
     return { valida: false, motivo: "Sem base legal indicada." };
   }
   const diploma = biblioteca.find((d) =>
-    baseLegal.toLowerCase().includes(d.diploma.split(",")[0].toLowerCase()),
+    baseLegal.toLowerCase().includes((d.diploma.split(",")[0] ?? "").toLowerCase()),
   );
   if (!diploma) {
     return { valida: false, motivo: "Diploma não registado na Biblioteca Jurídica." };
