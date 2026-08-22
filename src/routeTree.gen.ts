@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProcessosIndexRouteImport } from './routes/processos.index'
 import { Route as ProcessosIdRouteImport } from './routes/processos.$id'
 import { Route as ProcessosNovoRouteImport } from './routes/processos.novo'
+import { Route as ProcessosIdIndexRouteImport } from './routes/processos.$id.index'
 import { Route as ProcessosIdDocumentosRouteImport } from './routes/processos.$id.documentos'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const ProcessosNovoRoute = ProcessosNovoRouteImport.update({
   path: '/processos/novo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProcessosIdIndexRoute = ProcessosIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProcessosIdRoute,
+} as any)
 const ProcessosIdDocumentosRoute = ProcessosIdDocumentosRouteImport.update({
   id: '/documentos',
   path: '/documentos',
@@ -47,13 +53,14 @@ export interface FileRoutesByFullPath {
   '/processos/novo': typeof ProcessosNovoRoute
   '/processos/': typeof ProcessosIndexRoute
   '/processos/$id/documentos': typeof ProcessosIdDocumentosRoute
+  '/processos/$id/': typeof ProcessosIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/processos/$id': typeof ProcessosIdRouteWithChildren
   '/processos/novo': typeof ProcessosNovoRoute
   '/processos': typeof ProcessosIndexRoute
   '/processos/$id/documentos': typeof ProcessosIdDocumentosRoute
+  '/processos/$id': typeof ProcessosIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +69,7 @@ export interface FileRoutesById {
   '/processos/novo': typeof ProcessosNovoRoute
   '/processos/': typeof ProcessosIndexRoute
   '/processos/$id/documentos': typeof ProcessosIdDocumentosRoute
+  '/processos/$id/': typeof ProcessosIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,13 +79,14 @@ export interface FileRouteTypes {
     | '/processos/novo'
     | '/processos/'
     | '/processos/$id/documentos'
+    | '/processos/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/processos/$id'
     | '/processos/novo'
     | '/processos'
     | '/processos/$id/documentos'
+    | '/processos/$id'
   id:
     | '__root__'
     | '/'
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
     | '/processos/novo'
     | '/processos/'
     | '/processos/$id/documentos'
+    | '/processos/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProcessosNovoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/processos/$id/': {
+      id: '/processos/$id/'
+      path: '/'
+      fullPath: '/processos/$id/'
+      preLoaderRoute: typeof ProcessosIdIndexRouteImport
+      parentRoute: typeof ProcessosIdRoute
+    }
     '/processos/$id/documentos': {
       id: '/processos/$id/documentos'
       path: '/documentos'
@@ -136,10 +153,12 @@ declare module '@tanstack/react-router' {
 
 interface ProcessosIdRouteChildren {
   ProcessosIdDocumentosRoute: typeof ProcessosIdDocumentosRoute
+  ProcessosIdIndexRoute: typeof ProcessosIdIndexRoute
 }
 
 const ProcessosIdRouteChildren: ProcessosIdRouteChildren = {
   ProcessosIdDocumentosRoute: ProcessosIdDocumentosRoute,
+  ProcessosIdIndexRoute: ProcessosIdIndexRoute,
 }
 
 const ProcessosIdRouteWithChildren = ProcessosIdRoute._addFileChildren(
